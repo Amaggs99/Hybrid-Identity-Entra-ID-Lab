@@ -10,14 +10,14 @@ Each ticket represents a realistic enterprise administration task commonly perfo
 
 # Project Progress
 
-**Overall Progress:** **0 / 10 Tickets Completed**
+**Overall Progress:** **3 / 10 Tickets Completed**
 
 |  Ticket | Title                                                |   Status  |
 | :-----: | ---------------------------------------------------- | :-------: |
-| HYB-001 | Assess Active Directory Environment                  | ⏳ Pending |
-| HYB-002 | Configure Active Directory UPN Suffix                | ⏳ Pending |
-| HYB-003 | Update User UPNs for Hybrid Identity                 | ⏳ Pending |
-| HYB-004 | Install Microsoft Entra Connect Sync                 | ⏳ Pending |
+| HYB-001 | Assess Active Directory Environment                  | ✅ Completed |
+| HYB-002 | Configure Active Directory UPN Suffix                | ✅ Completed |
+| HYB-003 | Update User UPNs for Hybrid Identity                 | ✅ Completed |
+| HYB-004 | Install Microsoft Entra Connect Sync                 | 🚧 In Progress |
 | HYB-005 | Configure Organizational Unit (OU) Filtering         | ⏳ Pending |
 | HYB-006 | Perform Initial Directory Synchronization            | ⏳ Pending |
 | HYB-007 | Verify Synchronized Users in Microsoft Entra ID      | ⏳ Pending |
@@ -55,6 +55,18 @@ Verify that the existing Active Directory environment is healthy and ready for h
 * Review users and security groups
 * Confirm Microsoft Entra Connect prerequisites
 
+**Status:** ✅ Completed
+
+**Completed Work**
+
+* Validated Active Directory and DNS health
+* Restored and verified DC01 Internet connectivity through the VMware NAT interface
+* Corrected multihomed DNS behavior so the DNS Server service listens only on `192.168.66.10`
+* Corrected stale DNS records and validated the `adlab.local` DNS zone
+* Configured and validated domain controller time synchronization
+* Reviewed Organizational Units, users, and security groups
+* Confirmed the environment is ready for hybrid identity preparation
+
 ---
 
 ## HYB-002 — Configure Active Directory UPN Suffix
@@ -69,6 +81,14 @@ Configure a routable User Principal Name (UPN) suffix that matches the verified 
 * Verify domain ownership
 * Configure Active Directory Domains and Trusts
 * Validate UPN availability
+
+**Status:** ✅ Completed
+
+**Completed Work**
+
+* Confirmed the Microsoft 365 tenant domain `Maggs777.onmicrosoft.com`
+* Added `Maggs777.onmicrosoft.com` as an alternative UPN suffix in Active Directory Domains and Trusts
+* Validated that the new suffix is available for Active Directory user accounts
 
 ---
 
@@ -85,6 +105,15 @@ Update selected Active Directory user accounts to use the new routable UPN suffi
 * Confirm naming consistency
 * Prepare identities for synchronization
 
+**Status:** ✅ Completed
+
+**Completed Work**
+
+* Updated John Smith as the initial test account
+* Verified the test user's UPN through PowerShell
+* Updated the remaining enabled lab users to `@Maggs777.onmicrosoft.com`
+* Verified the enabled user accounts and on-premises security groups before synchronization
+
 ---
 
 ## HYB-004 — Install Microsoft Entra Connect Sync
@@ -100,6 +129,24 @@ Deploy Microsoft Entra Connect and establish synchronization between the on-prem
 * Connect Microsoft 365 tenant
 * Configure Password Hash Synchronization
 * Validate installation
+
+**Status:** 🚧 In Progress
+
+**Work Completed So Far**
+
+* Deployed a dedicated Windows Server 2022 synchronization server named `SYNC01`
+* Configured dual VMware network adapters for internal AD connectivity and outbound Internet access
+* Configured the internal SYNC01 interface as `192.168.66.30/24`
+* Configured internal DNS to use DC01 at `192.168.66.10`
+* Verified connectivity and domain controller discovery
+* Corrected the SYNC01 time zone to Eastern Time
+* Joined SYNC01 to the `adlab.local` domain
+* Verified the Active Directory secure channel
+* Verified successful domain Administrator authentication on SYNC01
+
+**Next Step**
+
+Install and configure Microsoft Entra Connect Sync on SYNC01.
 
 ---
 
@@ -196,9 +243,9 @@ Investigate and resolve common synchronization issues.
 
 # Completion Checklist
 
-* [ ] HYB-001 — Assess Active Directory Environment
-* [ ] HYB-002 — Configure Active Directory UPN Suffix
-* [ ] HYB-003 — Update User UPNs for Hybrid Identity
+* [x] HYB-001 — Assess Active Directory Environment
+* [x] HYB-002 — Configure Active Directory UPN Suffix
+* [x] HYB-003 — Update User UPNs for Hybrid Identity
 * [ ] HYB-004 — Install Microsoft Entra Connect Sync
 * [ ] HYB-005 — Configure Organizational Unit (OU) Filtering
 * [ ] HYB-006 — Perform Initial Directory Synchronization

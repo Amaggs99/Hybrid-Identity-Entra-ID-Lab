@@ -3,7 +3,7 @@
 </p>
 
 ![Status](https://img.shields.io/badge/Status-In%20Progress-yellow)
-![Progress](https://img.shields.io/badge/Progress-0%2F10%20Completed-lightgrey)
+![Progress](https://img.shields.io/badge/Progress-3%2F10%20Completed-blue)
 ![Windows Server](https://img.shields.io/badge/Windows%20Server-2022-0078D4)
 ![Microsoft Entra ID](https://img.shields.io/badge/Microsoft-Entra%20ID-0078D4)
 ![Microsoft 365](https://img.shields.io/badge/Microsoft%20365-Business%20Premium-blue)
@@ -49,10 +49,13 @@ Each ticket represents a realistic administrative task performed by System Admin
 | Component         | Configuration                        |
 | ----------------- | ------------------------------------ |
 | Hypervisor        | VMware Workstation Pro               |
-| Domain Controller | Windows Server 2022                  |
+| Domain Controller | DC01 — Windows Server 2022           |
+| Sync Server       | SYNC01 — Windows Server 2022         |
 | Active Directory  | AD DS                                |
 | DNS               | Active Directory Integrated          |
 | Domain            | adlab.local                          |
+| DC01 Address      | 192.168.66.10                        |
+| SYNC01 Address    | 192.168.66.30                        |
 | Management        | Active Directory Users and Computers |
 | Administration    | PowerShell                           |
 
@@ -80,11 +83,19 @@ Each ticket represents a realistic administrative task performed by System Admin
                    Microsoft Entra ID
                             ▲
                             │
-                 Microsoft Entra Connect
+              Microsoft Entra Connect Sync
+                    (installation pending)
                             ▲
                             │
-                 Active Directory Domain
-                     Windows Server 2022
+                         SYNC01
+                 Windows Server 2022
+                 Domain: adlab.local
+                 IP: 192.168.66.30
+                            ▲
+                            │
+                           DC01
+                AD DS + DNS / Windows Server 2022
+                 IP: 192.168.66.10
                             ▲
                             │
                    Domain Users & Groups
@@ -149,10 +160,10 @@ Each ticket represents a realistic administrative task performed by System Admin
 
 | Ticket  | Status | Description                                  |
 | ------- | :----: | -------------------------------------------- |
-| HYB-001 |    ⏳   | Assess Active Directory Environment          |
-| HYB-002 |    ⏳   | Configure Active Directory UPN Suffix        |
-| HYB-003 |    ⏳   | Update User UPNs                             |
-| HYB-004 |    ⏳   | Install Microsoft Entra Connect Sync         |
+| HYB-001 |    ✅   | Assess Active Directory Environment          |
+| HYB-002 |    ✅   | Configure Active Directory UPN Suffix        |
+| HYB-003 |    ✅   | Update User UPNs                             |
+| HYB-004 |    🚧   | Install Microsoft Entra Connect Sync         |
 | HYB-005 |    ⏳   | Configure OU Filtering                       |
 | HYB-006 |    ⏳   | Perform Initial Directory Synchronization    |
 | HYB-007 |    ⏳   | Verify Synchronized Users                    |
@@ -185,16 +196,16 @@ Hybrid-Identity-Entra-ID-Lab
 │   └── HYB-010-Sync-Troubleshooting.md
 │
 ├── Screenshots
-│   ├── HYB-001
-│   ├── HYB-002
-│   ├── HYB-003
-│   ├── HYB-004
-│   ├── HYB-005
-│   ├── HYB-006
-│   ├── HYB-007
-│   ├── HYB-008
-│   ├── HYB-009
-│   └── HYB-010
+│   ├── HYB-001-Assess-Active-Directory-Environment
+│   ├── HYB-002-Configure-Active-Directory-UPN-Suffix
+│   ├── HYB-003-Update-User-UPNs-for-Hybrid-Identity
+│   ├── HYB-004-Install-Microsoft-Entra-Connect-Sync
+│   ├── HYB-005-Configure-OU-Filtering
+│   ├── HYB-006-Initial-Directory-Synchronization
+│   ├── HYB-007-Verify-Synchronized-Entra-ID-Users
+│   ├── HYB-008-Password-Hash-Synchronization
+│   ├── HYB-009-Synchronize-AD-Security-Groups
+│   └── HYB-010-Troubleshoot-Hybrid-Identity-Synchronization
 │
 └── Diagrams
     └── Hybrid-Identity-Architecture.png
@@ -216,9 +227,19 @@ By completing this lab, I will gain hands-on experience with:
 
 ---
 
+# Current Implementation Status
+
+The on-premises Active Directory environment has been assessed and prepared for hybrid identity. A cloud-compatible UPN suffix (`Maggs777.onmicrosoft.com`) has been configured and the enabled lab users have been updated to use the new UPN format.
+
+A dedicated Windows Server 2022 synchronization server, **SYNC01**, has also been deployed. Its host-only interface is configured as `192.168.66.30` with DNS directed to **DC01** at `192.168.66.10`. Domain controller discovery and connectivity were validated, the server time zone was corrected to Eastern Time, SYNC01 was joined to `adlab.local`, and the Active Directory secure channel was successfully verified.
+
+The next implementation phase is the installation and configuration of **Microsoft Entra Connect Sync** on SYNC01.
+
+---
+
 # Screenshots
 
-Project screenshots will be organized by ticket within the `Screenshots` directory.
+Project screenshots are organized by ticket within the `Screenshots` directory. The folder names mirror the ticket workflow so the implementation evidence can be followed in the same order as the project roadmap.
 
 ---
 

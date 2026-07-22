@@ -26,7 +26,27 @@ Commands are organized by lab ticket to provide a clear record of the administra
 ## PowerShell
 
 ```powershell
-# Commands will be documented during this ticket.
+# Review Organizational Units
+Get-ADOrganizationalUnit -Filter * |
+Select-Object Name, DistinguishedName
+
+# Review Active Directory users
+Get-ADUser -Filter * |
+Select-Object Name, SamAccountName, UserPrincipalName, Enabled
+
+# Review Active Directory groups
+Get-ADGroup -Filter * |
+Select-Object Name, GroupScope, GroupCategory
+
+# Review DNS Server listening interfaces
+Get-DnsServerSetting -All |
+Select-Object -ExpandProperty ListeningIpAddress
+
+# Restart DNS after interface configuration
+Restart-Service DNS
+
+# Validate Active Directory DNS health
+dcdiag /test:dns /v
 ```
 
 ## Administrative Tools
@@ -45,8 +65,12 @@ Commands are organized by lab ticket to provide a clear record of the administra
 
 ## PowerShell
 
-```powershell
-# Commands will be documented during this ticket.
+No PowerShell command was required for the UPN suffix change. The alternative UPN suffix was configured through **Active Directory Domains and Trusts**.
+
+Configured suffix:
+
+```text
+Maggs777.onmicrosoft.com
 ```
 
 ## Administrative Tools
@@ -61,7 +85,28 @@ Commands are organized by lab ticket to provide a clear record of the administra
 ## PowerShell
 
 ```powershell
-# Commands will be documented during this ticket.
+# Verify the initial test user's UPN
+Get-ADUser jsmith -Properties UserPrincipalName |
+Select-Object Name, SamAccountName, UserPrincipalName
+
+# Update the remaining enabled lab users
+$Users = "sbrown","edavis","mwilson"
+
+foreach ($User in $Users) {
+    Set-ADUser $User -UserPrincipalName "$User@Maggs777.onmicrosoft.com"
+}
+
+# Verify all enabled users in the Company\Users OU
+Get-ADUser -Filter 'Enabled -eq $true' -SearchBase "OU=Users,OU=Company,DC=adlab,DC=local" |
+Select-Object Name, SamAccountName, UserPrincipalName
+
+# Review users selected for synchronization
+Get-ADUser -Filter * -SearchBase "OU=Users,OU=Company,DC=adlab,DC=local" |
+Select-Object Name, Enabled, UserPrincipalName
+
+# Review security groups selected for synchronization
+Get-ADGroup -Filter * -SearchBase "OU=Groups,OU=Company,DC=adlab,DC=local" |
+Select-Object Name, GroupScope, GroupCategory
 ```
 
 ## Administrative Tools
@@ -75,15 +120,70 @@ Commands are organized by lab ticket to provide a clear record of the administra
 
 ## PowerShell
 
+Commands used so far while preparing the dedicated `SYNC01` server:
+
 ```powershell
-# Commands will be documented during this ticket.
+# Identify the Host-only and NAT interfaces
+Get-NetIPConfiguration |
+Select-Object InterfaceAlias,
+    @{Name="IPv4Address";Expression={$_.IPv4Address.IPAddress}},
+    @{Name="Gateway";Expression={$_.IPv4DefaultGateway.NextHop}},
+    @{Name="DNSServer";Expression={$_.DNSServer.ServerAddresses -join ", "}}
+
+# Disable DHCP on the internal Host-only interface
+Set-NetIPInterface -InterfaceAlias "Ethernet0" -Dhcp Disabled
+
+# Configure the static internal address
+New-NetIPAddress `
+-InterfaceAlias "Ethernet0" `
+-IPAddress 192.168.66.30 `
+-PrefixLength 24
+
+# Configure DC01 as the DNS server for the internal interface
+Set-DnsClientServerAddress `
+-InterfaceAlias "Ethernet0" `
+-ServerAddresses 192.168.66.10
+
+# Test connectivity to DC01
+ping 192.168.66.10
+
+# Resolve the domain controller through AD DNS
+Resolve-DnsName DC01.adlab.local
+
+# Discover a domain controller for adlab.local
+nltest /dsgetdc:adlab.local
+
+# Review the local date and time zone
+Get-Date
+Get-TimeZone
+
+# Correct the server time zone
+Set-TimeZone -Id "Eastern Standard Time"
+
+# Join SYNC01 to the Active Directory domain
+Add-Computer -DomainName "adlab.local" -Credential "ADLAB\Administrator" -Restart
+
+# Verify domain membership
+(Get-CimInstance Win32_ComputerSystem) |
+Select-Object Name, Domain, PartOfDomain
+
+# Identify the currently authenticated account
+whoami
+
+# Verify the secure channel to Active Directory
+nltest /sc_verify:adlab.local
 ```
 
 ## Administrative Tools
 
+* VMware Workstation Pro
+* Server Manager
+* Windows PowerShell
 * Microsoft Entra Connect
 * Microsoft Entra Admin Center
 * Microsoft 365 Admin Center
+
+> **Current status:** SYNC01 preparation and domain integration are complete. Microsoft Entra Connect Sync installation is the next step in HYB-004.
 
 ---
 
