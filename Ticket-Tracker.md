@@ -10,14 +10,14 @@ Each ticket represents a realistic enterprise administration task commonly perfo
 
 # Project Progress
 
-**Overall Progress:** **3 / 10 Tickets Completed**
+**Overall Progress:** **4 / 10 Tickets Completed**
 
 |  Ticket | Title                                                |   Status  |
 | :-----: | ---------------------------------------------------- | :-------: |
 | HYB-001 | Assess Active Directory Environment                  | ✅ Completed |
 | HYB-002 | Configure Active Directory UPN Suffix                | ✅ Completed |
 | HYB-003 | Update User UPNs for Hybrid Identity                 | ✅ Completed |
-| HYB-004 | Install Microsoft Entra Connect Sync                 | 🚧 In Progress |
+| HYB-004 | Install Microsoft Entra Connect Sync                 | ✅ Completed |
 | HYB-005 | Configure Organizational Unit (OU) Filtering         | ⏳ Pending |
 | HYB-006 | Perform Initial Directory Synchronization            | ⏳ Pending |
 | HYB-007 | Verify Synchronized Users in Microsoft Entra ID      | ⏳ Pending |
@@ -130,23 +130,29 @@ Deploy Microsoft Entra Connect and establish synchronization between the on-prem
 * Configure Password Hash Synchronization
 * Validate installation
 
-**Status:** 🚧 In Progress
+**Status:** ✅ Completed
 
-**Work Completed So Far**
+**Completed Work**
 
 * Deployed a dedicated Windows Server 2022 synchronization server named `SYNC01`
 * Configured dual VMware network adapters for internal AD connectivity and outbound Internet access
 * Configured the internal SYNC01 interface as `192.168.66.30/24`
 * Configured internal DNS to use DC01 at `192.168.66.10`
-* Verified connectivity and domain controller discovery
 * Corrected the SYNC01 time zone to Eastern Time
-* Joined SYNC01 to the `adlab.local` domain
-* Verified the Active Directory secure channel
-* Verified successful domain Administrator authentication on SYNC01
+* Joined SYNC01 to the `adlab.local` domain and verified domain authentication
+* Installed Microsoft Entra Connect Sync on SYNC01 using Custom configuration
+* Connected the `adlab.local` Active Directory forest
+* Connected the `Maggs777.onmicrosoft.com` Microsoft Entra tenant
+* Selected Password Hash Synchronization as the authentication method
+* Configured OU filtering to synchronize the required `Company` users and groups
+* Completed the Microsoft Entra Connect configuration and initiated the initial synchronization
+* Verified synchronized users in the Microsoft 365 admin center
+* Verified synchronized identities in Microsoft Entra ID using the on-premises synchronization status
+* Troubleshot Active Directory forest discovery error 1355 and restored connectivity after identifying that DC01 was powered off
 
 **Next Step**
 
-Install and configure Microsoft Entra Connect Sync on SYNC01.
+Proceed to HYB-005 to specifically validate and document Organizational Unit filtering and synchronization scope.
 
 ---
 
@@ -246,7 +252,7 @@ Investigate and resolve common synchronization issues.
 * [x] HYB-001 — Assess Active Directory Environment
 * [x] HYB-002 — Configure Active Directory UPN Suffix
 * [x] HYB-003 — Update User UPNs for Hybrid Identity
-* [ ] HYB-004 — Install Microsoft Entra Connect Sync
+* [x] HYB-004 — Install Microsoft Entra Connect Sync
 * [ ] HYB-005 — Configure Organizational Unit (OU) Filtering
 * [ ] HYB-006 — Perform Initial Directory Synchronization
 * [ ] HYB-007 — Verify Synchronized Users in Microsoft Entra ID

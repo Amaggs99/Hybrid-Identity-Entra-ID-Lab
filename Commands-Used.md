@@ -120,7 +120,7 @@ Select-Object Name, GroupScope, GroupCategory
 
 ## PowerShell
 
-Commands used so far while preparing the dedicated `SYNC01` server:
+Commands used while deploying, validating, and troubleshooting the dedicated `SYNC01` synchronization server:
 
 ```powershell
 # Identify the Host-only and NAT interfaces
@@ -172,18 +172,84 @@ whoami
 
 # Verify the secure channel to Active Directory
 nltest /sc_verify:adlab.local
+
+# Review DNS servers assigned to each IPv4 interface during
+# Active Directory forest discovery troubleshooting
+Get-DnsClientServerAddress -AddressFamily IPv4 |
+Select-Object InterfaceAlias, ServerAddresses
+
+# Query DC01 directly after forest discovery failed
+Resolve-DnsName DC01.adlab.local -Server 192.168.66.10
+
+# Test direct IP connectivity after the DNS query timed out
+ping 192.168.66.10
+
+# Review SYNC01 IPv4 addresses and default gateways
+Get-NetIPConfiguration |
+Select-Object InterfaceAlias,
+    @{N="IPv4";E={$_.IPv4Address.IPAddress}},
+    @{N="Gateway";E={$_.IPv4DefaultGateway.NextHop}}
 ```
+
+## Microsoft Entra Connect Configuration
+
+Microsoft Entra Connect Sync was configured through the graphical configuration wizard. No additional PowerShell commands were required to complete the initial connector configuration.
+
+Configuration performed included:
+
+* Selected **Custom** configuration
+* Selected **Password Hash Synchronization**
+* Connected the `Maggs777.onmicrosoft.com` Microsoft Entra tenant
+* Connected the `adlab.local` Active Directory forest
+* Configured synchronization scope using OU filtering
+* Selected the required `Company\Users` and `Company\Groups` OUs
+* Allowed Microsoft Entra Connect to manage the source anchor
+* Used `mS-DS-ConsistencyGuid` as the source anchor attribute
+* Started the initial synchronization when configuration completed
+* Verified synchronized users in Microsoft 365
+* Verified `On-premises sync = Yes` for synchronized users in Microsoft Entra ID
+
+## Troubleshooting Performed
+
+During Active Directory forest discovery, the following command returned Error 1355:
+
+```powershell
+nltest /dsgetdc:adlab.local
+```
+
+The error reported:
+
+```text
+ERROR_NO_SUCH_DOMAIN
+```
+
+A direct DNS query to DC01 then timed out:
+
+```powershell
+Resolve-DnsName DC01.adlab.local -Server 192.168.66.10
+```
+
+Direct IP connectivity also failed:
+
+```powershell
+ping 192.168.66.10
+```
+
+Reviewing the SYNC01 network configuration confirmed that the internal interface and DNS configuration were correct. Investigation then determined that `DC01` was powered off.
+
+After DC01 was powered on, Active Directory DNS and domain controller discovery resumed and Microsoft Entra Connect successfully discovered and connected the `adlab.local` forest.
 
 ## Administrative Tools
 
 * VMware Workstation Pro
 * Server Manager
 * Windows PowerShell
-* Microsoft Entra Connect
+* Microsoft Entra Connect Sync
 * Microsoft Entra Admin Center
 * Microsoft 365 Admin Center
+* Active Directory Users and Computers
 
-> **Current status:** SYNC01 preparation and domain integration are complete. Microsoft Entra Connect Sync installation is the next step in HYB-004.
+> **Status:** HYB-004 completed. Microsoft Entra Connect Sync is installed and configured on SYNC01, the on-premises forest and Microsoft Entra tenant are connected, Password Hash Synchronization is enabled, and the initial synchronized identities have been verified.
 
 ---
 

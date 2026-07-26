@@ -3,7 +3,7 @@
 </p>
 
 ![Status](https://img.shields.io/badge/Status-In%20Progress-yellow)
-![Progress](https://img.shields.io/badge/Progress-3%2F10%20Completed-blue)
+![Progress](https://img.shields.io/badge/Progress-4%2F10%20Completed-blue)
 ![Windows Server](https://img.shields.io/badge/Windows%20Server-2022-0078D4)
 ![Microsoft Entra ID](https://img.shields.io/badge/Microsoft-Entra%20ID-0078D4)
 ![Microsoft 365](https://img.shields.io/badge/Microsoft%20365-Business%20Premium-blue)
@@ -78,13 +78,15 @@ Each ticket represents a realistic administrative task performed by System Admin
 
 ```text
                      Microsoft 365
-                            │
+                            ▲
                             │
                    Microsoft Entra ID
+                Maggs777.onmicrosoft.com
                             ▲
                             │
               Microsoft Entra Connect Sync
-                    (installation pending)
+               Password Hash Synchronization
+                    OU-based filtering
                             ▲
                             │
                          SYNC01
@@ -101,7 +103,7 @@ Each ticket represents a realistic administrative task performed by System Admin
                    Domain Users & Groups
 ```
 
-*A polished architecture diagram will be added as the project progresses.*
+Microsoft Entra Connect Sync is now operational on SYNC01. Selected on-premises identities are synchronized from Active Directory to Microsoft Entra ID using Password Hash Synchronization and a controlled OU synchronization scope.
 
 ---
 
@@ -163,7 +165,7 @@ Each ticket represents a realistic administrative task performed by System Admin
 | HYB-001 |    ✅   | Assess Active Directory Environment          |
 | HYB-002 |    ✅   | Configure Active Directory UPN Suffix        |
 | HYB-003 |    ✅   | Update User UPNs                             |
-| HYB-004 |    🚧   | Install Microsoft Entra Connect Sync         |
+| HYB-004 |    ✅   | Install Microsoft Entra Connect Sync         |
 | HYB-005 |    ⏳   | Configure OU Filtering                       |
 | HYB-006 |    ⏳   | Perform Initial Directory Synchronization    |
 | HYB-007 |    ⏳   | Verify Synchronized Users                    |
@@ -231,9 +233,15 @@ By completing this lab, I will gain hands-on experience with:
 
 The on-premises Active Directory environment has been assessed and prepared for hybrid identity. A cloud-compatible UPN suffix (`Maggs777.onmicrosoft.com`) has been configured and the enabled lab users have been updated to use the new UPN format.
 
-A dedicated Windows Server 2022 synchronization server, **SYNC01**, has also been deployed. Its host-only interface is configured as `192.168.66.30` with DNS directed to **DC01** at `192.168.66.10`. Domain controller discovery and connectivity were validated, the server time zone was corrected to Eastern Time, SYNC01 was joined to `adlab.local`, and the Active Directory secure channel was successfully verified.
+A dedicated Windows Server 2022 synchronization server, **SYNC01**, was deployed with separate internal and NAT network interfaces. SYNC01 was joined to `adlab.local`, configured to use DC01 for internal Active Directory DNS resolution, and validated for domain connectivity and secure-channel health.
 
-The next implementation phase is the installation and configuration of **Microsoft Entra Connect Sync** on SYNC01.
+**Microsoft Entra Connect Sync is now installed and configured on SYNC01.** The `adlab.local` Active Directory forest is connected to the `Maggs777.onmicrosoft.com` Microsoft Entra tenant using **Password Hash Synchronization (PHS)**. Synchronization scope was restricted using OU filtering so that the required `Company\\Users` and `Company\\Groups` objects are eligible for synchronization.
+
+The initial synchronization was successfully initiated and the lab users were verified in both the Microsoft 365 Admin Center and Microsoft Entra ID. Emily Davis, John Smith, Mike Wilson, and Sarah Brown display **On-premises sync = Yes**, confirming that their identities originate from the on-premises Active Directory environment.
+
+HYB-004 also included troubleshooting an Entra authentication security restriction and Active Directory forest discovery Error 1355. The forest discovery issue was isolated to DC01 being powered off; restoring the domain controller returned DNS and AD DS connectivity.
+
+The next ticket is **HYB-005 — Configure Organizational Unit (OU) Filtering**, where the synchronization scope will be specifically validated and documented as its own administrative task.
 
 ---
 
