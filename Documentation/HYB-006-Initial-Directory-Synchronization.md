@@ -173,15 +173,19 @@ Cloud-only accounts remained independent, demonstrating a properly functioning h
 
 # Screenshots
 
-## HYB-006-01-Manual-Delta-Synchronization.png
+## Manual Delta Synchronization
 
-Manual Delta synchronization successfully initiated using PowerShell.
+![HYB-006-01-Manual-Delta-Synchronization](../Screenshots/HYB-006-Initial-Directory-Synchronization/HYB-006-01-Manual-Delta-Synchronization.png)
+
+Manual Delta synchronization successfully initiated using PowerShell. This demonstrates a successful administrator-initiated Delta synchronization using Microsoft Entra Connect.
 
 ---
 
-## HYB-006-02-Entra-Synchronized-Users.png
+## Synchronized Users in Microsoft Entra ID
 
-Microsoft Entra Admin Center displaying synchronized Active Directory users with the **On-premises sync** column confirming successful synchronization.
+![HYB-006-02-Entra-Synchronized-Users](../Screenshots/HYB-006-Initial-Directory-Synchronization/HYB-006-02-Entra-Synchronized-Users.png)
+
+Microsoft Entra Admin Center displaying synchronized Active Directory users with the **On-premises sync** column confirming successful directory synchronization and hybrid identity integration.
 
 ---
 
