@@ -111,11 +111,8 @@ eligible for synchronization while objects moved to excluded OUs fall
 outside the configured synchronization scope.
 
 ![OU filtering
-configuration](../Screenshots/HYB-005/10-OU-Filtering-Selected-OUs.png)
+configuration](../Screenshots/HYB-005-Configure-OU-Filtering/04-OU-Filtering-Updated-Scope.png)
 
-> **Note:** Screenshot filenames/paths should match the final repository
-> screenshot names. Update the image reference above if the
-> corresponding screenshot uses a different sequence number.
 
 ### 4. Verify Optional Features
 
@@ -174,7 +171,7 @@ These values confirmed that:
     validation.
 
 ![Entra Connect scheduler
-validation](../Screenshots/HYB-005/19-Entra-Connect-Scheduler-Validation.png)
+validation](../Screenshots/HYB-005-Configure-OU-Filtering/19-Entra-Connect-Scheduler-Validation.png)
 
 ## OU Filtering Lifecycle Test
 
@@ -245,7 +242,7 @@ The **Deleted users** view showed Emily Carter as a deleted cloud
 object.
 
 ![Out-of-scope user
-soft-deleted](../Screenshots/HYB-005/16-Out-Of-Scope-User-Soft-Deleted.png)
+soft-deleted](../Screenshots/HYB-005-Configure-OU-Filtering/16-Out-Of-Scope-User-Soft-Deleted.png)
 
 This demonstrated that moving an on-premises identity outside the
 configured Entra Connect synchronization scope caused the synchronized
@@ -288,7 +285,7 @@ Start-ADSyncSyncCycle -PolicyType Delta
 The synchronization request completed successfully.
 
 ![Restore user delta
-synchronization](../Screenshots/HYB-005/17-Restore-User-Delta-Sync.png)
+synchronization](../Screenshots/HYB-005-Configure-OU-Filtering/17-Restore-User-Delta-Sync.png)
 
 ### 3. Verify Automatic Restoration
 
@@ -304,7 +301,7 @@ On-premises sync: Yes
 ```
 
 ![Restored synchronized
-user](../Screenshots/HYB-005/18-Restored-Synced-User-Entra-ID.png)
+user](../Screenshots/HYB-005-Configure-OU-Filtering/18-Restored-Synced-User-Entra-ID.png)
 
 This confirmed that Entra Connect recognized the original on-premises
 Active Directory object when it returned to synchronization scope and
