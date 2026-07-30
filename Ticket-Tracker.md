@@ -10,7 +10,7 @@ Each ticket represents a realistic enterprise administration task commonly perfo
 
 # Project Progress
 
-**Overall Progress:** **5 / 10 Tickets Completed**
+**Overall Progress:** **6 / 10 Tickets Completed**
 
 |  Ticket | Title                                                |   Status  |
 | :-----: | ---------------------------------------------------- | :-------: |
@@ -19,7 +19,7 @@ Each ticket represents a realistic enterprise administration task commonly perfo
 | HYB-003 | Update User UPNs for Hybrid Identity                 | ✅ Completed |
 | HYB-004 | Install Microsoft Entra Connect Sync                 | ✅ Completed |
 | HYB-005 | Configure Organizational Unit (OU) Filtering         | ✅ Completed |
-| HYB-006 | Perform Initial Directory Synchronization            | ⏳ Pending |
+| HYB-006 | Perform Initial Directory Synchronization            | ✅ Completed |
 | HYB-007 | Verify Synchronized Users in Microsoft Entra ID      | ⏳ Pending |
 | HYB-008 | Configure and Validate Password Hash Synchronization | ⏳ Pending |
 | HYB-009 | Synchronize Active Directory Security Groups         | ⏳ Pending |
@@ -199,14 +199,34 @@ Proceed to HYB-006 to document and validate directory synchronization execution 
 
 **Objective**
 
-Run the first synchronization cycle and verify successful synchronization.
+Validate Microsoft Entra Connect synchronization by confirming scheduler health, manually initiating a Delta synchronization, and verifying that synchronized Active Directory users are successfully represented in Microsoft Entra ID.
 
 **Key Tasks**
 
-* Start synchronization
-* Monitor synchronization progress
-* Verify successful completion
-* Review synchronization statistics
+* Verify Microsoft Entra Connect scheduler
+* Validate synchronization scheduler configuration
+* Initiate manual Delta synchronization
+* Verify synchronization completion
+* Validate synchronized users in Microsoft Entra ID
+
+**Status:** ✅ Completed
+
+**Completed Work**
+
+* Verified the Microsoft Entra Connect scheduler using `Get-ADSyncScheduler`
+* Confirmed automatic synchronization is enabled with a 30-minute synchronization interval
+* Verified Delta synchronization is configured as the active synchronization policy
+* Confirmed SYNC01 is operating as the active synchronization server with Staging Mode disabled
+* Initiated a manual Delta synchronization using `Start-ADSyncSyncCycle -PolicyType Delta`
+* Verified the synchronization cycle completed successfully
+* Confirmed synchronized Active Directory users appear within Microsoft Entra ID
+* Verified synchronized users display **On-premises sync: Yes**, confirming Active Directory as the source of authority
+* Confirmed cloud-only administrative accounts remain independent from synchronized identities
+* Validated the hybrid identity environment is functioning correctly and ready for additional synchronization testing
+
+**Next Step**
+
+Proceed to HYB-007 to validate synchronized user attributes and compare on-premises Active Directory objects with their Microsoft Entra ID counterparts.
 
 ---
 
@@ -278,7 +298,7 @@ Investigate and resolve common synchronization issues.
 * [x] HYB-003 — Update User UPNs for Hybrid Identity
 * [x] HYB-004 — Install Microsoft Entra Connect Sync
 * [x] HYB-005 — Configure Organizational Unit (OU) Filtering
-* [ ] HYB-006 — Perform Initial Directory Synchronization
+* [x] HYB-006 — Perform Initial Directory Synchronization
 * [ ] HYB-007 — Verify Synchronized Users in Microsoft Entra ID
 * [ ] HYB-008 — Configure and Validate Password Hash Synchronization
 * [ ] HYB-009 — Synchronize Active Directory Security Groups

@@ -360,15 +360,65 @@ On-premises sync: Yes
 
 ## PowerShell
 
+Commands used to validate the Microsoft Entra Connect scheduler, manually initiate a Delta synchronization, and confirm successful synchronization completion.
+
 ```powershell
-# Commands will be documented during this ticket.
+# Review the Microsoft Entra Connect synchronization scheduler
+Get-ADSyncScheduler
+
+# Manually initiate a Delta synchronization
+Start-ADSyncSyncCycle -PolicyType Delta
+
+# Verify the synchronization cycle completed successfully
+Get-ADSyncScheduler
 ```
+
+The scheduler validation confirmed:
+
+```text
+CurrentlyEffectiveSyncCycleInterval : 00:30:00
+NextSyncCyclePolicyType             : Delta
+SyncCycleEnabled                    : True
+MaintenanceEnabled                  : True
+StagingModeEnabled                  : False
+SchedulerSuspended                  : False
+SyncCycleInProgress                 : False
+```
+
+The manual synchronization returned:
+
+```text
+Result
+------
+Success
+```
+
+## Synchronization Validation
+
+Following the successful Delta synchronization, synchronized identities were verified within the Microsoft Entra Admin Center.
+
+Validation confirmed:
+
+* Microsoft Entra Connect successfully completed the synchronization cycle.
+* Active Directory users synchronized to Microsoft Entra ID.
+* The **On-premises sync** column displayed **Yes** for synchronized users, confirming Active Directory as the source of authority.
+* Cloud-only administrative accounts remained independent from synchronized identities, demonstrating a properly functioning hybrid identity deployment.
+
+The synchronized users validated during this ticket included:
+
+* Emily Carter
+* Emily Davis
+* John Smith
+* Mike Wilson
+* Sarah Brown
 
 ## Administrative Tools
 
-* Microsoft Entra Connect
-* Synchronization Service Manager
 * Windows PowerShell
+* Microsoft Entra Connect Sync
+* Microsoft Entra Admin Center
+
+> **Status:** HYB-006 completed. Microsoft Entra Connect successfully performed a manual Delta synchronization, the synchronization scheduler was validated, and synchronized Active Directory users were confirmed within Microsoft Entra ID.
 
 ---
 

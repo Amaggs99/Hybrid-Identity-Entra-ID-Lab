@@ -3,7 +3,7 @@
 </p>
 
 ![Status](https://img.shields.io/badge/Status-In%20Progress-yellow)
-![Progress](https://img.shields.io/badge/Progress-5%2F10%20Completed-blue)
+![Progress](https://img.shields.io/badge/Progress-6%2F10%20Completed-blue)
 ![Windows Server](https://img.shields.io/badge/Windows%20Server-2022-0078D4)
 ![Microsoft Entra ID](https://img.shields.io/badge/Microsoft-Entra%20ID-0078D4)
 ![Microsoft 365](https://img.shields.io/badge/Microsoft%20365-Business%20Premium-blue)
@@ -167,7 +167,7 @@ Microsoft Entra Connect Sync is now operational on SYNC01. Selected on-premises 
 | HYB-003 |    ✅   | Update User UPNs                             |
 | HYB-004 |    ✅   | Install Microsoft Entra Connect Sync         |
 | HYB-005 |    ✅   | Configure OU Filtering                       |
-| HYB-006 |    ⏳   | Perform Initial Directory Synchronization    |
+| HYB-006 |    ✅   | Perform Initial Directory Synchronization    |
 | HYB-007 |    ⏳   | Verify Synchronized Users                    |
 | HYB-008 |    ⏳   | Configure Password Hash Synchronization      |
 | HYB-009 |    ⏳   | Synchronize Active Directory Groups          |
@@ -231,19 +231,21 @@ By completing this lab, I will gain hands-on experience with:
 
 # Current Implementation Status
 
-The on-premises Active Directory environment has been assessed and prepared for hybrid identity. A cloud-compatible UPN suffix (`Maggs777.onmicrosoft.com`) has been configured and the enabled lab users have been updated to use the new UPN format.
+The on-premises Active Directory environment has been fully prepared for hybrid identity. A cloud-compatible UPN suffix (`Maggs777.onmicrosoft.com`) has been configured, and all enabled lab users have been updated to use the new User Principal Name format prior to synchronization.
 
-A dedicated Windows Server 2022 synchronization server, **SYNC01**, was deployed with separate internal and NAT network interfaces. SYNC01 was joined to `adlab.local`, configured to use DC01 for internal Active Directory DNS resolution, and validated for domain connectivity and secure-channel health.
+A dedicated Windows Server 2022 synchronization server (**SYNC01**) has been deployed with separate internal and NAT network interfaces. The server is domain joined, configured to use DC01 for Active Directory-integrated DNS resolution, and validated for secure-channel communication with the `adlab.local` domain.
 
-**Microsoft Entra Connect Sync is installed and operational on SYNC01.** The `adlab.local` Active Directory forest is connected to the `Maggs777.onmicrosoft.com` Microsoft Entra tenant using **Password Hash Synchronization (PHS)**.
+Microsoft Entra Connect Sync is fully operational using **Password Hash Synchronization (PHS)** as the authentication method. Automatic synchronization is enabled with a **30-minute synchronization interval**, Delta synchronization policy, and Staging Mode disabled.
 
-HYB-005 expanded and validated the synchronization boundary using selective OU filtering. The `Company\\Users`, `Company\\Groups`, `Company\\Computers`, and `Company\\Servers` OUs are included in synchronization scope, while `Company\\Disabled Users` remains excluded. CLIENT01 is organized under the synchronized Computers OU and SYNC01 under the synchronized Servers OU.
+HYB-005 validated selective Organizational Unit (OU) filtering by including the `Company\Users`, `Company\Groups`, `Company\Computers`, and `Company\Servers` OUs while excluding the `Company\Disabled Users` OU. User lifecycle behavior was confirmed by moving Emily Carter in and out of the synchronization scope, verifying automatic cloud soft deletion and restoration through Microsoft Entra Connect.
 
-OU-filtering behavior was validated using Emily Carter. While located in `Company\\Users`, her identity synchronized to Microsoft Entra ID and displayed **On-premises sync = Yes**. Moving the same Active Directory object to the excluded `Company\\Disabled Users` OU and running a delta synchronization caused the corresponding Entra identity to be soft-deleted. Returning Emily Carter to `Company\\Users` and synchronizing again automatically restored the cloud identity without a manual Entra restore.
+HYB-006 validated the operational synchronization process. The Microsoft Entra Connect scheduler was verified using PowerShell, a manual Delta synchronization was successfully initiated, and the synchronization cycle completed successfully. Synchronized Active Directory users were then verified within Microsoft Entra ID using the **On-premises sync** attribute, confirming that Active Directory remains the source of authority for synchronized identities.
 
-The Microsoft Entra Connect scheduler was also validated with PowerShell. Automatic synchronization remains enabled with a 30-minute effective interval, delta synchronization policy, staging mode disabled, and the scheduler operating normally.
+The hybrid identity environment is now operating as expected with successful synchronization between the on-premises Active Directory environment and Microsoft Entra ID.
 
-The project is now **5 / 10 tickets complete**. The next ticket is **HYB-006 — Perform Initial Directory Synchronization**, which will focus on documenting synchronization execution, monitoring, and successful completion.
+The project is now **6 / 10 tickets complete**.
+
+The next implementation phase is **HYB-007 — Verify Synchronized Users in Microsoft Entra ID**, which will focus on validating synchronized user attributes, comparing on-premises and cloud identities, and confirming the source of authority for synchronized objects.
 
 ---
 
