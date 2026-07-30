@@ -10,7 +10,7 @@ Each ticket represents a realistic enterprise administration task commonly perfo
 
 # Project Progress
 
-**Overall Progress:** **4 / 10 Tickets Completed**
+**Overall Progress:** **5 / 10 Tickets Completed**
 
 |  Ticket | Title                                                |   Status  |
 | :-----: | ---------------------------------------------------- | :-------: |
@@ -18,7 +18,7 @@ Each ticket represents a realistic enterprise administration task commonly perfo
 | HYB-002 | Configure Active Directory UPN Suffix                | ✅ Completed |
 | HYB-003 | Update User UPNs for Hybrid Identity                 | ✅ Completed |
 | HYB-004 | Install Microsoft Entra Connect Sync                 | ✅ Completed |
-| HYB-005 | Configure Organizational Unit (OU) Filtering         | ⏳ Pending |
+| HYB-005 | Configure Organizational Unit (OU) Filtering         | ✅ Completed |
 | HYB-006 | Perform Initial Directory Synchronization            | ⏳ Pending |
 | HYB-007 | Verify Synchronized Users in Microsoft Entra ID      | ⏳ Pending |
 | HYB-008 | Configure and Validate Password Hash Synchronization | ⏳ Pending |
@@ -160,14 +160,38 @@ Proceed to HYB-005 to specifically validate and document Organizational Unit fil
 
 **Objective**
 
-Limit synchronization to selected Organizational Units.
+Limit Microsoft Entra Connect synchronization to selected Organizational Units and validate synchronization-scope behavior.
 
 **Key Tasks**
 
 * Configure synchronization scope
 * Exclude unnecessary objects
 * Validate OU filtering
-* Run synchronization preview
+* Validate user lifecycle behavior when objects move in and out of synchronization scope
+* Verify synchronization scheduler status
+
+**Status:** ✅ Completed
+
+**Completed Work**
+
+* Configured Microsoft Entra Connect to use selected domain and OU synchronization
+* Included the `Company\Users`, `Company\Groups`, `Company\Computers`, and `Company\Servers` OUs in synchronization scope
+* Excluded the `Company\Disabled Users` OU from synchronization scope
+* Confirmed CLIENT01 is located in the synchronized `Company\Computers` OU
+* Confirmed SYNC01 is located in the synchronized `Company\Servers` OU
+* Retained Password Hash Synchronization as an enabled synchronization feature
+* Verified Emily Carter synchronized to Microsoft Entra ID from the included `Company\Users` OU
+* Moved Emily Carter to the excluded `Company\Disabled Users` OU and initiated a delta synchronization
+* Confirmed the out-of-scope Emily Carter identity was soft-deleted in Microsoft Entra ID
+* Returned Emily Carter to the synchronized `Company\Users` OU and initiated another delta synchronization
+* Confirmed Microsoft Entra Connect automatically restored Emily Carter without a manual cloud restore
+* Verified the restored identity reports `On-premises sync: Yes`
+* Validated the Microsoft Entra Connect scheduler with `Get-ADSyncScheduler`
+* Confirmed a 30-minute effective synchronization interval, delta policy, enabled scheduler, disabled staging mode, and non-suspended scheduler
+
+**Next Step**
+
+Proceed to HYB-006 to document and validate directory synchronization execution and synchronization results.
 
 ---
 
@@ -253,7 +277,7 @@ Investigate and resolve common synchronization issues.
 * [x] HYB-002 — Configure Active Directory UPN Suffix
 * [x] HYB-003 — Update User UPNs for Hybrid Identity
 * [x] HYB-004 — Install Microsoft Entra Connect Sync
-* [ ] HYB-005 — Configure Organizational Unit (OU) Filtering
+* [x] HYB-005 — Configure Organizational Unit (OU) Filtering
 * [ ] HYB-006 — Perform Initial Directory Synchronization
 * [ ] HYB-007 — Verify Synchronized Users in Microsoft Entra ID
 * [ ] HYB-008 — Configure and Validate Password Hash Synchronization

@@ -257,14 +257,102 @@ After DC01 was powered on, Active Directory DNS and domain controller discovery 
 
 ## PowerShell
 
+Commands used to validate the Microsoft Entra Connect scheduler and manually process OU-scope changes:
+
 ```powershell
-# Commands will be documented during this ticket.
+# Review the Microsoft Entra Connect synchronization scheduler
+Get-ADSyncScheduler
+
+# Trigger a delta synchronization after moving a user
+# outside or back inside the configured synchronization scope
+Start-ADSyncSyncCycle -PolicyType Delta
+```
+
+The scheduler validation confirmed:
+
+```text
+CurrentlyEffectiveSyncCycleInterval : 00:30:00
+NextSyncCyclePolicyType             : Delta
+SyncCycleEnabled                    : True
+MaintenanceEnabled                  : True
+StagingModeEnabled                  : False
+SchedulerSuspended                  : False
+SyncCycleInProgress                 : False
+```
+
+## Microsoft Entra Connect Configuration
+
+OU filtering was configured through the Microsoft Entra Connect Sync configuration wizard using **Sync selected domains and OUs**.
+
+The following `Company` OUs were included in synchronization scope:
+
+* `Company\Computers`
+* `Company\Groups`
+* `Company\Servers`
+* `Company\Users`
+
+The following OU was intentionally excluded:
+
+* `Company\Disabled Users`
+
+`CLIENT01` was placed in `Company\Computers` and `SYNC01` was placed in `Company\Servers`.
+
+Password Hash Synchronization remained enabled.
+
+## OU Filtering Validation
+
+Emily Carter was used to validate synchronization-scope behavior.
+
+The account was initially located in the synchronized `Company\Users` OU and appeared in Microsoft Entra ID as an on-premises synchronized identity.
+
+Emily Carter was then moved to:
+
+```text
+Company\Disabled Users
+```
+
+Because this OU was excluded from synchronization scope, a delta synchronization was initiated:
+
+```powershell
+Start-ADSyncSyncCycle -PolicyType Delta
+```
+
+The command returned:
+
+```text
+Result
+------
+Success
+```
+
+Microsoft Entra ID subsequently showed Emily Carter under **Deleted users**, confirming that the synchronized identity had been soft-deleted after the on-premises object moved outside synchronization scope.
+
+Emily Carter was then moved back to:
+
+```text
+Company\Users
+```
+
+Another delta synchronization was initiated:
+
+```powershell
+Start-ADSyncSyncCycle -PolicyType Delta
+```
+
+The command again completed successfully. Emily Carter automatically returned to **All users** in Microsoft Entra ID without a manual cloud restore and showed:
+
+```text
+On-premises sync: Yes
 ```
 
 ## Administrative Tools
 
-* Microsoft Entra Connect
+* Microsoft Entra Connect Sync
 * Active Directory Users and Computers
+* Microsoft Entra Admin Center
+* Windows PowerShell
+
+> **Status:** HYB-005 completed. Selective OU synchronization was configured and validated by moving a synchronized user outside the configured scope, confirming cloud soft deletion, returning the user to scope, and confirming automatic restoration through Microsoft Entra Connect.
 
 ---
 

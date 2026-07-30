@@ -3,7 +3,7 @@
 </p>
 
 ![Status](https://img.shields.io/badge/Status-In%20Progress-yellow)
-![Progress](https://img.shields.io/badge/Progress-4%2F10%20Completed-blue)
+![Progress](https://img.shields.io/badge/Progress-5%2F10%20Completed-blue)
 ![Windows Server](https://img.shields.io/badge/Windows%20Server-2022-0078D4)
 ![Microsoft Entra ID](https://img.shields.io/badge/Microsoft-Entra%20ID-0078D4)
 ![Microsoft 365](https://img.shields.io/badge/Microsoft%20365-Business%20Premium-blue)
@@ -166,7 +166,7 @@ Microsoft Entra Connect Sync is now operational on SYNC01. Selected on-premises 
 | HYB-002 |    ✅   | Configure Active Directory UPN Suffix        |
 | HYB-003 |    ✅   | Update User UPNs                             |
 | HYB-004 |    ✅   | Install Microsoft Entra Connect Sync         |
-| HYB-005 |    ⏳   | Configure OU Filtering                       |
+| HYB-005 |    ✅   | Configure OU Filtering                       |
 | HYB-006 |    ⏳   | Perform Initial Directory Synchronization    |
 | HYB-007 |    ⏳   | Verify Synchronized Users                    |
 | HYB-008 |    ⏳   | Configure Password Hash Synchronization      |
@@ -235,13 +235,15 @@ The on-premises Active Directory environment has been assessed and prepared for 
 
 A dedicated Windows Server 2022 synchronization server, **SYNC01**, was deployed with separate internal and NAT network interfaces. SYNC01 was joined to `adlab.local`, configured to use DC01 for internal Active Directory DNS resolution, and validated for domain connectivity and secure-channel health.
 
-**Microsoft Entra Connect Sync is now installed and configured on SYNC01.** The `adlab.local` Active Directory forest is connected to the `Maggs777.onmicrosoft.com` Microsoft Entra tenant using **Password Hash Synchronization (PHS)**. Synchronization scope was restricted using OU filtering so that the required `Company\\Users` and `Company\\Groups` objects are eligible for synchronization.
+**Microsoft Entra Connect Sync is installed and operational on SYNC01.** The `adlab.local` Active Directory forest is connected to the `Maggs777.onmicrosoft.com` Microsoft Entra tenant using **Password Hash Synchronization (PHS)**.
 
-The initial synchronization was successfully initiated and the lab users were verified in both the Microsoft 365 Admin Center and Microsoft Entra ID. Emily Davis, John Smith, Mike Wilson, and Sarah Brown display **On-premises sync = Yes**, confirming that their identities originate from the on-premises Active Directory environment.
+HYB-005 expanded and validated the synchronization boundary using selective OU filtering. The `Company\\Users`, `Company\\Groups`, `Company\\Computers`, and `Company\\Servers` OUs are included in synchronization scope, while `Company\\Disabled Users` remains excluded. CLIENT01 is organized under the synchronized Computers OU and SYNC01 under the synchronized Servers OU.
 
-HYB-004 also included troubleshooting an Entra authentication security restriction and Active Directory forest discovery Error 1355. The forest discovery issue was isolated to DC01 being powered off; restoring the domain controller returned DNS and AD DS connectivity.
+OU-filtering behavior was validated using Emily Carter. While located in `Company\\Users`, her identity synchronized to Microsoft Entra ID and displayed **On-premises sync = Yes**. Moving the same Active Directory object to the excluded `Company\\Disabled Users` OU and running a delta synchronization caused the corresponding Entra identity to be soft-deleted. Returning Emily Carter to `Company\\Users` and synchronizing again automatically restored the cloud identity without a manual Entra restore.
 
-The next ticket is **HYB-005 — Configure Organizational Unit (OU) Filtering**, where the synchronization scope will be specifically validated and documented as its own administrative task.
+The Microsoft Entra Connect scheduler was also validated with PowerShell. Automatic synchronization remains enabled with a 30-minute effective interval, delta synchronization policy, staging mode disabled, and the scheduler operating normally.
+
+The project is now **5 / 10 tickets complete**. The next ticket is **HYB-006 — Perform Initial Directory Synchronization**, which will focus on documenting synchronization execution, monitoring, and successful completion.
 
 ---
 
