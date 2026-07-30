@@ -10,7 +10,7 @@ Each ticket represents a realistic enterprise administration task commonly perfo
 
 # Project Progress
 
-**Overall Progress:** **6 / 10 Tickets Completed**
+**Overall Progress:** **7 / 10 Tickets Completed**
 
 |  Ticket | Title                                                |   Status  |
 | :-----: | ---------------------------------------------------- | :-------: |
@@ -20,7 +20,7 @@ Each ticket represents a realistic enterprise administration task commonly perfo
 | HYB-004 | Install Microsoft Entra Connect Sync                 | ✅ Completed |
 | HYB-005 | Configure Organizational Unit (OU) Filtering         | ✅ Completed |
 | HYB-006 | Perform Initial Directory Synchronization            | ✅ Completed |
-| HYB-007 | Verify Synchronized Users in Microsoft Entra ID      | ⏳ Pending |
+| HYB-007 | Verify Synchronized Users in Microsoft Entra ID      | ✅ Completed |
 | HYB-008 | Configure and Validate Password Hash Synchronization | ⏳ Pending |
 | HYB-009 | Synchronize Active Directory Security Groups         | ⏳ Pending |
 | HYB-010 | Troubleshoot Hybrid Identity Synchronization         | ⏳ Pending |
@@ -234,14 +234,35 @@ Proceed to HYB-007 to validate synchronized user attributes and compare on-premi
 
 **Objective**
 
-Validate that synchronized users appear correctly in Microsoft Entra ID.
+Validate that synchronized Active Directory user accounts are accurately represented within Microsoft Entra ID and Microsoft 365 while confirming identity consistency, synchronization metadata, and account status across the hybrid environment.
 
 **Key Tasks**
 
-* Verify synchronized identities
-* Compare on-premises and cloud attributes
-* Validate synchronization status
-* Confirm source of authority
+* Verify synchronized Active Directory user objects
+* Compare on-premises and cloud user attributes
+* Validate User Principal Name (UPN) consistency
+* Verify synchronization metadata
+* Validate disabled account synchronization
+* Confirm synchronized identities appear in Microsoft 365
+* Verify multiple synchronized users
+
+**Status:** ✅ Completed
+
+**Completed Work**
+
+* Verified Emily Carter's on-premises Active Directory account on DC01 as the authoritative identity
+* Confirmed the synchronized Microsoft Entra ID user object matched the on-premises account
+* Validated User Principal Name (UPN) consistency between Active Directory and Microsoft Entra ID
+* Verified synchronization metadata including Distinguished Name, Immutable ID, SAM Account Name, on-premises domain, and last synchronization timestamp
+* Confirmed **On-premises sync enabled = Yes** for synchronized identities
+* Verified the synchronized identity appears within the Microsoft 365 Admin Center
+* Confirmed the previously disabled Active Directory account synchronized correctly as **Account Enabled = No** in Microsoft Entra ID and **Sign-in blocked** in Microsoft 365
+* Verified synchronization across multiple Active Directory users within the configured synchronization scope
+* Confirmed cloud-only identities remain independent from synchronized on-premises identities
+
+**Next Step**
+
+Proceed to HYB-008 to validate Password Hash Synchronization by changing an on-premises Active Directory password, initiating a synchronization cycle, and confirming successful Microsoft 365 authentication using the updated credentials.
 
 ---
 
@@ -299,7 +320,7 @@ Investigate and resolve common synchronization issues.
 * [x] HYB-004 — Install Microsoft Entra Connect Sync
 * [x] HYB-005 — Configure Organizational Unit (OU) Filtering
 * [x] HYB-006 — Perform Initial Directory Synchronization
-* [ ] HYB-007 — Verify Synchronized Users in Microsoft Entra ID
+* [x] HYB-007 — Verify Synchronized Users in Microsoft Entra ID
 * [ ] HYB-008 — Configure and Validate Password Hash Synchronization
 * [ ] HYB-009 — Synchronize Active Directory Security Groups
 * [ ] HYB-010 — Troubleshoot Hybrid Identity Synchronization

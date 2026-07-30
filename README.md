@@ -3,7 +3,7 @@
 </p>
 
 ![Status](https://img.shields.io/badge/Status-In%20Progress-yellow)
-![Progress](https://img.shields.io/badge/Progress-6%2F10%20Completed-blue)
+![Progress](https://img.shields.io/badge/Progress-7%2F10%20Completed-blue)
 ![Windows Server](https://img.shields.io/badge/Windows%20Server-2022-0078D4)
 ![Microsoft Entra ID](https://img.shields.io/badge/Microsoft-Entra%20ID-0078D4)
 ![Microsoft 365](https://img.shields.io/badge/Microsoft%20365-Business%20Premium-blue)
@@ -168,7 +168,7 @@ Microsoft Entra Connect Sync is now operational on SYNC01. Selected on-premises 
 | HYB-004 |    ✅   | Install Microsoft Entra Connect Sync         |
 | HYB-005 |    ✅   | Configure OU Filtering                       |
 | HYB-006 |    ✅   | Perform Initial Directory Synchronization    |
-| HYB-007 |    ⏳   | Verify Synchronized Users                    |
+| HYB-007 |    ✅   | Verify Synchronized Users                    |
 | HYB-008 |    ⏳   | Configure Password Hash Synchronization      |
 | HYB-009 |    ⏳   | Synchronize Active Directory Groups          |
 | HYB-010 |    ⏳   | Troubleshoot Hybrid Identity Synchronization |
@@ -243,9 +243,13 @@ HYB-006 validated the operational synchronization process. The Microsoft Entra C
 
 The hybrid identity environment is now operating as expected with successful synchronization between the on-premises Active Directory environment and Microsoft Entra ID.
 
-The project is now **6 / 10 tickets complete**.
+The project is now **7 / 10 tickets complete**.
 
-The next implementation phase is **HYB-007 — Verify Synchronized Users in Microsoft Entra ID**, which will focus on validating synchronized user attributes, comparing on-premises and cloud identities, and confirming the source of authority for synchronized objects.
+HYB-007 validated synchronized identities across the hybrid environment by comparing on-premises Active Directory user objects with their corresponding Microsoft Entra ID and Microsoft 365 identities. User Principal Names (UPNs), synchronization metadata, account status, and identity consistency were successfully verified. The previously disabled Emily Carter account correctly synchronized its disabled state from Active Directory to Microsoft Entra ID and Microsoft 365, demonstrating that account lifecycle changes propagate as expected through Microsoft Entra Connect.
+
+The project is now operating with validated identity synchronization, synchronization metadata, and Microsoft 365 identity integration.
+
+The next implementation phase is **HYB-008 — Configure and Validate Password Hash Synchronization**, which will focus on validating password changes from Active Directory, synchronizing password hashes to Microsoft Entra ID, and confirming successful Microsoft 365 authentication using synchronized credentials.
 
 ---
 
